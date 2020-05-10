@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pre-Assignment</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+</head>
+<body>
+
+<canvas id="myChart"></canvas>
+<form action="/data" METHOD="GET">
+<button>Show Data History</button>
+
+
+</form>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+
+<script>
+
+
+
+
+    var xmlhttp;
+
+
+
+    var data = [];
+
+
+    var ctx = document.getElementById("myChart");
+
+    var xmlhttp1;
+
+    xmlhttp1 = new XMLHttpRequest();
+
+
+    var token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MjAsImVtYWlsIjoibWprLm5hcmhpQGdtYWlsLmNvbSIsImlhdCI6MTU4ODk2OTU5N30.F8Y20zYVFGpqEQJAkoFSxj_Y-F0FQ_YtTIGnlPeJ-NU"
+
+    xmlhttp = new XMLHttpRequest();
+
+    var url = "https://opendata.hopefully.works/api/events";
+
+
+    xmlhttp.open("GET", url, true);
+
+    xmlhttp.onreadystatechange = function () {
+
+        if (xmlhttp.status == 200 && xmlhttp.readyState == 4) {
+
+            response = JSON.parse(xmlhttp.responseText);
+
+            console.log(response);
+
+            sendJson(response);
+
+            console.log(response.labels);
+
+            data.push(response.sensor1);
+            data.push(response.sensor2);
+            data.push(response.sensor3);
+            data.push(response.sensor4);
+
+            var chart = new Chart(ctx, {
+
+                type: 'bar',
+
+
+
+                data: {
+                    labels: ['Sensor 1', "Sensor 2", "Sensor 3", "Sensor 4"],
+                    datasets: [{
+                        label: 'Recent data',
+                        backgroundColor: 'rgb(0, 0, 255)',
+                        borderColor: 'rgb(0, 0, 255)',
+                        data: data
+                    }]
+                },
+
+
+                options: {
+
+                }
+            });
+
+
+
+
+        }
+    }
+
+
+    xmlhttp.setRequestHeader("Authorization", "Bearer " + token);
+    xmlhttp.send();
+
+
+
+    function sendJson(data) {
+
+        xmlhttp1.open('POST', 'http://localhost:8080');
+        xmlhttp1.setRequestHeader('Content-Type', 'application/json');
+        xmlhttp1.send(JSON.stringify(data));
+
+    }
+
+
+
+
+
+
+</script>
+
+
+</body>
+</html>
